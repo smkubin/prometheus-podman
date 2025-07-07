@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  spectrumVirtualize.yml: "targets:\n  - ipAddress: 10.8.30.243\n    userid: prometheus\n
+    \   password: prometheus\n    verifyCert: true \nextra_labels:\n  - name: storage\n
+    \   value: v7kg2\ntls_server_config:\n  ca_cert: ''\n  server_cert: ''\n  server_key:
+    ''\n"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: exporter-config

@@ -1,0 +1,7 @@
+[Install]
+WantedBy=default.target
+
+[Kube]
+ConfigMap=confmap-alertmgr.yaml
+ConfigMap=secret-alertmgr.yaml
+Yaml=alertmanager.yaml

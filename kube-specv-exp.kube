@@ -1,0 +1,6 @@
+[Install]
+WantedBy=default.target
+
+[Kube]
+ConfigMap=confmap-specv-exporter.yaml
+Yaml=specv-exp.yaml

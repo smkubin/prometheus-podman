@@ -1,0 +1,31 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: prom-am
+  annotations: {} 
+spec:
+  containers:
+    - name: alertmanager
+      image: docker.io/bitnami/alertmanager:latest
+      ports:
+        - containerPort: 9093
+      volumeMounts:
+        - name: alertmanager-data
+          mountPath: /opt/bitnami/alertmanager/data
+        - name: alertmgr-conf
+          mountPath: /opt/bitnami/alertmanager/conf/config.yml
+          subPath: config.yml 
+        - name: alertmgr-bot-token
+          mountPath: /opt/bitnami/alertmanager/conf/bot-token.secret
+          subPath: tg-token
+  volumes:
+    - name: alertmanager-data
+      hostPath:
+        path: /home/prometheus/prometheus/alertmanager
+        type: Directory
+    - name: alertmgr-conf
+      configMap:
+        name: alertmgr-config
+    - name: alertmgr-bot-token
+      configMap: 
+        name: alertmgr-bot-token

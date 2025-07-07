@@ -1,0 +1,24 @@
+apiVersion: v1
+data:
+  config.yml: |
+    route:
+      group_by: ['alertname']
+      group_wait: 30s
+      group_interval: 5m
+      repeat_interval: 1h
+      receiver: 'tg'
+    receivers:
+      - name: 'tg'
+        telegram_configs:
+        - bot_token_file: "/opt/bitnami/alertmanager/conf/bot-token.secret" 
+          chat_id: 483678633
+    inhibit_rules:
+      - source_match:
+          severity: 'critical'
+        target_match:
+          severity: 'warning'
+        equal: ['alertname', 'dev', 'instance']
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: alertmgr-config

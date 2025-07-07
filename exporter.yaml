@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prom-exporter
+spec:
+  hostNetwork: true
+  hostPID: true
+  containers:
+    - name: node-exporter
+      image: quay.io/prometheus/node-exporter:latest
+      args: ["--path.rootfs=/host"]
+      volumeMounts:
+        - name: rootfs          # must match volumes[].name below
+          mountPath: /host
+          readOnly: true
+          mountPropagation: HostToContainer  # gives the rslave behaviour
+  volumes:
+    - name: rootfs
+      hostPath:
+        path: /
+        type: Directory

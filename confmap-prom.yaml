@@ -1,0 +1,73 @@
+apiVersion: v1
+data:
+  prometheus.yml: |+
+    # my global config
+    global:
+      scrape_interval: 5s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+      evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+      # scrape_timeout is set to the global default (10s).
+
+    # Alertmanager configuration
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+              - alertmanager:9093
+
+    # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+    rule_files:
+      - "/opt/bitnami/prometheus/data/prometheus_rules.yml"
+      # - "first_rules.yml"
+      # - "second_rules.yml"
+
+    # A scrape configuration containing exactly one endpoint to scrape:
+    # Here it's Prometheus itself.
+    scrape_configs:
+      # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+      - job_name: "prometheus"
+
+        # metrics_path defaults to '/metrics'
+        # scheme defaults to 'http'.
+
+        static_configs:
+          - targets: ["localhost:9090"]
+           # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+            labels:
+              app: "prometheus"
+          - targets: ["alertmanager:9093"]
+            labels:
+              app: "alertmanager"
+      - job_name: "v7kg2"
+        static_configs:
+          - targets: ["exporter:9119"]
+            labels:
+              storage: "v7kg2"
+      - job_name: "hosts"
+        static_configs:
+          - targets: ["10.8.216.65:9182"]
+            labels:
+              hosts: "my_laptop"
+          - targets: ["host.containers.internal:9100","10.8.30.147:9100"]
+            labels:
+              hosts: "vms"
+
+  prometheus_rules.yml: |
+    groups:
+      - name: custom_rules
+        rules:
+          - record: node_memory_MemFree_percent
+            expr: 100 - (100 * node_memory_MemFree_bytes / node_memory_MemTotal_bytes)
+      - name: alert_rules
+        rules:
+          - alert: InstanceDown
+            expr: up == 0
+            for: 1m
+            labels:
+              severity: critical
+            annotations:
+              summary: "instance {{ .instance }} is down"
+              description:  "job {{ .hosts }} is down"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: confmap-prom

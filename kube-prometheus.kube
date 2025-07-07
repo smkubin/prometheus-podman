@@ -1,0 +1,6 @@
+[Install]
+WantedBy=default.target
+
+[Kube]
+Yaml=prometheus.yaml
+ConfigMap=confmap-prom.yaml
