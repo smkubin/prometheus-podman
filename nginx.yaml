@@ -11,6 +11,8 @@ spec:
       ports:
         - containerPort: 9443 
           hostPort: 9443
+        - containerPort: 9000 
+          hostPort: 9000
       volumeMounts:
         - name: nginx-conf
           mountPath: /opt/bitnami/nginx/conf/server_blocks

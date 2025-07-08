@@ -1,0 +1,6 @@
+[Install]
+WantedBy=default.target
+
+[Kube]
+ConfigMap=confmap-grafana.yaml
+Yaml=grafana.yaml

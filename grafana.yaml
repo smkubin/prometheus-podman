@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata: 
+  name: prom-grafana
+  annotations: {} 
+spec:
+  containers:
+    - name: grafana
+      image: docker.io/bitnami/grafana:latest
+        #      ports:
+        #        - containerPort: 9093
+      volumeMounts:
+        - name: grafana-conf
+          mountPath: /opt/bitnami/grafana/conf/grafana.ini
+          subPath: grafana.ini
+        - name: grafana-data
+          mountPath: /opt/bitnami/grafana/data             
+  volumes:
+    - name: grafana-data
+      hostPath:
+        path: /home/prometheus/prometheus/grafana
+        type: Directory
+    - name: grafana-conf 
+      configMap: 
+        name: grafana-conf
+
